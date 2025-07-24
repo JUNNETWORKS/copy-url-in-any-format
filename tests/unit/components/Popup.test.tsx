@@ -1,7 +1,9 @@
+import '@testing-library/jest-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Popup } from '../../../src/popup/App';
 import type { Format } from '../../../src/shared/types';
+import React from 'react';
 
 // Mock chrome.tabs API
 const mockTab = {

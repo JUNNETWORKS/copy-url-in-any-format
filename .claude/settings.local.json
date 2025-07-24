@@ -34,7 +34,8 @@
       "Bash(gh pr view:*)",
       "Bash(cp:*)",
       "Bash(npm test:*)",
-      "WebFetch(domain:zenn.dev)"
+      "Bash(npm outdated)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }
