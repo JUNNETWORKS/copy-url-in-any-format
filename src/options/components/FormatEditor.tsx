@@ -103,7 +103,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({
             checked={autoCopy}
             onChange={(e) => setAutoCopy(e.target.checked)}
           />
-          <span>Auto Copy (自動的にクリップボードにコピー)</span>
+          <span>Auto Copy (Automatically copy when extension opens)</span>
         </label>
       </div>
 
