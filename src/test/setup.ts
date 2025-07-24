@@ -10,10 +10,16 @@ configure({
 });
 
 // Mock Chrome API
+type StorageCallback<T> = (items: T) => void;
+type StorageGetCallback = StorageCallback<{ [key: string]: unknown }>;
+type StorageSetCallback = () => void;
+type StorageRemoveCallback = () => void;
+type StorageClearCallback = () => void;
+
 const mockChrome = {
   storage: {
     local: {
-      get: vi.fn().mockImplementation((keys?: any, callback?: any) => {
+      get: vi.fn().mockImplementation((keys?: string | string[] | object | StorageGetCallback, callback?: StorageGetCallback) => {
         if (typeof keys === 'function') {
           keys({});
           return;
@@ -24,21 +30,21 @@ const mockChrome = {
         }
         return Promise.resolve({});
       }),
-      set: vi.fn().mockImplementation((_items: any, callback?: any) => {
+      set: vi.fn().mockImplementation((_items: { [key: string]: unknown }, callback?: StorageSetCallback) => {
         if (callback) {
           callback();
           return;
         }
         return Promise.resolve();
       }),
-      remove: vi.fn().mockImplementation((_keys: any, callback?: any) => {
+      remove: vi.fn().mockImplementation((_keys: string | string[], callback?: StorageRemoveCallback) => {
         if (callback) {
           callback();
           return;
         }
         return Promise.resolve();
       }),
-      clear: vi.fn().mockImplementation((callback?: any) => {
+      clear: vi.fn().mockImplementation((callback?: StorageClearCallback) => {
         if (callback) {
           callback();
           return;
@@ -47,7 +53,7 @@ const mockChrome = {
       }),
     },
     sync: {
-      get: vi.fn().mockImplementation((keys?: any, callback?: any) => {
+      get: vi.fn().mockImplementation((keys?: string | string[] | object | StorageGetCallback, callback?: StorageGetCallback) => {
         if (typeof keys === 'function') {
           keys({});
           return;
@@ -58,21 +64,21 @@ const mockChrome = {
         }
         return Promise.resolve({});
       }),
-      set: vi.fn().mockImplementation((_items: any, callback?: any) => {
+      set: vi.fn().mockImplementation((_items: { [key: string]: unknown }, callback?: StorageSetCallback) => {
         if (callback) {
           callback();
           return;
         }
         return Promise.resolve();
       }),
-      remove: vi.fn().mockImplementation((_keys: any, callback?: any) => {
+      remove: vi.fn().mockImplementation((_keys: string | string[], callback?: StorageRemoveCallback) => {
         if (callback) {
           callback();
           return;
         }
         return Promise.resolve();
       }),
-      clear: vi.fn().mockImplementation((callback?: any) => {
+      clear: vi.fn().mockImplementation((callback?: StorageClearCallback) => {
         if (callback) {
           callback();
           return;
@@ -82,14 +88,14 @@ const mockChrome = {
     },
   },
   runtime: {
-    lastError: undefined,
+    lastError: undefined as chrome.runtime.LastError | undefined,
   },
   tabs: {
-    query: vi.fn().mockResolvedValue([]),
+    query: vi.fn().mockResolvedValue([] as chrome.tabs.Tab[]),
   },
 };
 
-globalThis.chrome = mockChrome as any;
+globalThis.chrome = mockChrome as unknown as typeof chrome;
 
 // Mock window.confirm
 globalThis.confirm = vi.fn(() => true) as unknown as typeof window.confirm;

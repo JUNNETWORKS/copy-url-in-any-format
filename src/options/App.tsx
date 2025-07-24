@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { FormatEditor } from './components/FormatEditor';
 import { FormatStorage } from '../shared/storage';
 import type { Format } from '../shared/types';
@@ -9,13 +9,9 @@ export const Options: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const storage = new FormatStorage();
+  const storage = useMemo(() => new FormatStorage(), []);
 
-  useEffect(() => {
-    loadFormats();
-  }, []);
-
-  const loadFormats = async () => {
+  const loadFormats = useCallback(async () => {
     try {
       const loadedFormats = await storage.getFormats();
       setFormats(loadedFormats);
@@ -24,7 +20,11 @@ export const Options: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [storage]);
+
+  useEffect(() => {
+    loadFormats();
+  }, [loadFormats]);
 
   const handleSave = async (
     format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>

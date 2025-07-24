@@ -27,7 +27,7 @@ export const FormatList: React.FC<FormatListProps> = ({
       setTimeout(() => {
         setCopiedId(null);
       }, 2000);
-    } catch (error) {
+    } catch {
       setErrorId(format.id);
       setCopiedId(null);
 
