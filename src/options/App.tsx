@@ -30,7 +30,13 @@ export const Options: React.FC = () => {
     format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>
   ) => {
     try {
-      await storage.saveFormat(format);
+      // If this format has autoCopy enabled, clear it from other formats
+      if (format.autoCopy) {
+        const savedFormat = await storage.saveFormat(format);
+        await storage.clearOtherAutoCopyFormats(savedFormat.id);
+      } else {
+        await storage.saveFormat(format);
+      }
       await loadFormats();
       setEditingFormat(null);
       setIsAdding(false);
@@ -86,7 +92,12 @@ export const Options: React.FC = () => {
             {formats.map((format) => (
               <div key={format.id} className="format-item">
                 <div className="format-info">
-                  <h3>{format.name}</h3>
+                  <h3>
+                    {format.name}
+                    {format.autoCopy && (
+                      <span className="auto-copy-badge"> (Auto Copy)</span>
+                    )}
+                  </h3>
                   <code className="format-template">{format.template}</code>
                 </div>
                 <div className="format-actions">

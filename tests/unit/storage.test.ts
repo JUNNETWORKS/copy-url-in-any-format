@@ -229,4 +229,89 @@ describe('FormatStorage', () => {
       });
     });
   });
+
+  describe('autoCopy methods', () => {
+    describe('getAutoCopyFormatId', () => {
+      it('should return null when no auto-copy format is set', async () => {
+        vi.mocked(chrome.storage.local.get).mockResolvedValue({});
+        
+        const result = await storage.getAutoCopyFormatId();
+        expect(result).toBeNull();
+      });
+
+      it('should return the auto-copy format id', async () => {
+        vi.mocked(chrome.storage.local.get).mockResolvedValue({ autoCopyFormatId: 'format-1' });
+        
+        const result = await storage.getAutoCopyFormatId();
+        expect(result).toBe('format-1');
+      });
+    });
+
+    describe('setAutoCopyFormatId', () => {
+      it('should set the auto-copy format id', async () => {
+        await storage.setAutoCopyFormatId('format-1');
+        
+        expect(chrome.storage.local.set).toHaveBeenCalledWith({
+          autoCopyFormatId: 'format-1',
+        });
+      });
+
+      it('should remove the auto-copy format id when null', async () => {
+        await storage.setAutoCopyFormatId(null);
+        
+        expect(chrome.storage.local.remove).toHaveBeenCalledWith('autoCopyFormatId');
+      });
+    });
+
+    describe('clearOtherAutoCopyFormats', () => {
+      it('should clear autoCopy flag from all formats except the specified one', async () => {
+        const mockFormats: Format[] = [
+          {
+            id: 'format-1',
+            name: 'Format 1',
+            template: '{title}',
+            autoCopy: true,
+            createdAt: 1000,
+            updatedAt: 1000,
+          },
+          {
+            id: 'format-2',
+            name: 'Format 2',
+            template: '{url}',
+            autoCopy: true,
+            createdAt: 2000,
+            updatedAt: 2000,
+          },
+          {
+            id: 'format-3',
+            name: 'Format 3',
+            template: '{title} - {url}',
+            createdAt: 3000,
+            updatedAt: 3000,
+          },
+        ];
+
+        vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
+        
+        await storage.clearOtherAutoCopyFormats('format-2');
+        
+        expect(chrome.storage.local.set).toHaveBeenCalledWith({
+          formats: [
+            {
+              ...mockFormats[0],
+              autoCopy: false,
+            },
+            {
+              ...mockFormats[1],
+              autoCopy: true,
+            },
+            {
+              ...mockFormats[2],
+              autoCopy: false,
+            },
+          ],
+        });
+      });
+    });
+  });
 });

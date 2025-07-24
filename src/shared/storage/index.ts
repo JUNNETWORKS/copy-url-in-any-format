@@ -2,6 +2,7 @@ import type { Format } from '../types';
 
 export class FormatStorage {
   private readonly STORAGE_KEY = 'formats';
+  private readonly AUTO_COPY_KEY = 'autoCopyFormatId';
 
   async getFormats(): Promise<Format[]> {
     const result = await chrome.storage.local.get(this.STORAGE_KEY);
@@ -39,6 +40,7 @@ export class FormatStorage {
       id: this.generateId(),
       name: format.name,
       template: format.template,
+      autoCopy: format.autoCopy,
       createdAt: now,
       updatedAt: now,
     };
@@ -70,6 +72,7 @@ export class FormatStorage {
       id: this.generateId(),
       name: format.name,
       template: format.template,
+      autoCopy: format.autoCopy,
       createdAt: now,
       updatedAt: now,
     };
@@ -77,6 +80,28 @@ export class FormatStorage {
     formats.push(newFormat);
     await chrome.storage.local.set({ [this.STORAGE_KEY]: formats });
     return newFormat;
+  }
+
+  async getAutoCopyFormatId(): Promise<string | null> {
+    const result = await chrome.storage.local.get(this.AUTO_COPY_KEY);
+    return result[this.AUTO_COPY_KEY] || null;
+  }
+
+  async setAutoCopyFormatId(formatId: string | null): Promise<void> {
+    if (formatId === null) {
+      await chrome.storage.local.remove(this.AUTO_COPY_KEY);
+    } else {
+      await chrome.storage.local.set({ [this.AUTO_COPY_KEY]: formatId });
+    }
+  }
+
+  async clearOtherAutoCopyFormats(keepFormatId: string): Promise<void> {
+    const formats = await this.getFormats();
+    const updatedFormats = formats.map((format) => ({
+      ...format,
+      autoCopy: format.id === keepFormatId ? true : false,
+    }));
+    await chrome.storage.local.set({ [this.STORAGE_KEY]: updatedFormats });
   }
 
   private generateId(): string {

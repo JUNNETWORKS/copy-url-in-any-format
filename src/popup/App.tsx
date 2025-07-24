@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormatList } from './components/FormatList';
 import { FormatStorage } from '../shared/storage';
+import { formatUrl } from '../shared/formatters';
 import type { Format, PageInfo } from '../shared/types';
 
 export const Popup: React.FC = () => {
@@ -8,6 +9,7 @@ export const Popup: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [autoCopied, setAutoCopied] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -33,6 +35,21 @@ export const Popup: React.FC = () => {
         const storage = new FormatStorage();
         const loadedFormats = await storage.getFormatsWithDefaults();
         setFormats(loadedFormats);
+
+        // Check for auto-copy format
+        const autoCopyFormat = loadedFormats.find((f) => f.autoCopy);
+        if (autoCopyFormat) {
+          const formattedUrl = formatUrl({
+            title: activeTab.title,
+            url: activeTab.url,
+          }, autoCopyFormat);
+          await navigator.clipboard.writeText(formattedUrl);
+          setAutoCopied(true);
+          // Automatically close popup after 1 second
+          setTimeout(() => {
+            window.close();
+          }, 1000);
+        }
       } catch (err) {
         setError('Failed to load formats');
         console.error('Error loading popup data:', err);
@@ -48,10 +65,12 @@ export const Popup: React.FC = () => {
     chrome.runtime.openOptionsPage();
   };
 
-  if (loading) {
+  if (loading || autoCopied) {
     return (
       <div className="popup-container">
-        <div className="loading">Loading...</div>
+        <div className="loading">
+          {autoCopied ? 'Copied!' : 'Loading...'}
+        </div>
       </div>
     );
   }

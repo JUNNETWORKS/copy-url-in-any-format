@@ -7,6 +7,7 @@ export interface Format {
   id: string;
   name: string;
   template: string;
+  autoCopy?: boolean;
   createdAt: number;
   updatedAt: number;
 }
