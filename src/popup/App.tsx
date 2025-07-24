@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormatList } from './components/FormatList';
 import { FormatStorage } from '../shared/storage';
+import { formatUrl } from '../shared/formatters';
 import type { Format, PageInfo } from '../shared/types';
 
 export const Popup: React.FC = () => {
@@ -8,6 +9,7 @@ export const Popup: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [autoCopiedFormatId, setAutoCopiedFormatId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -33,6 +35,17 @@ export const Popup: React.FC = () => {
         const storage = new FormatStorage();
         const loadedFormats = await storage.getFormatsWithDefaults();
         setFormats(loadedFormats);
+
+        // Check for auto-copy format
+        const autoCopyFormat = loadedFormats.find((f) => f.autoCopy);
+        if (autoCopyFormat) {
+          const formattedUrl = formatUrl({
+            title: activeTab.title,
+            url: activeTab.url,
+          }, autoCopyFormat);
+          await navigator.clipboard.writeText(formattedUrl);
+          setAutoCopiedFormatId(autoCopyFormat.id);
+        }
       } catch (err) {
         setError('Failed to load formats');
         console.error('Error loading popup data:', err);
@@ -73,7 +86,11 @@ export const Popup: React.FC = () => {
         </button>
       </header>
       <main className="popup-main">
-        <FormatList formats={formats} pageInfo={pageInfo} />
+        <FormatList 
+          formats={formats} 
+          pageInfo={pageInfo} 
+          autoCopiedFormatId={autoCopiedFormatId}
+        />
       </main>
     </div>
   );

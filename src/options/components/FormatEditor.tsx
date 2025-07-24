@@ -17,6 +17,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({
 }) => {
   const [name, setName] = useState(format?.name || '');
   const [template, setTemplate] = useState(format?.template || '');
+  const [autoCopy, setAutoCopy] = useState(format?.autoCopy || false);
   const [error, setError] = useState<string | null>(null);
 
   const examplePageInfo = {
@@ -27,6 +28,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({
   useEffect(() => {
     setName(format?.name || '');
     setTemplate(format?.template || '');
+    setAutoCopy(format?.autoCopy || false);
     setError(null);
   }, [format]);
 
@@ -47,6 +49,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({
       Partial<Format> = {
       name: name.trim(),
       template: template.trim(),
+      autoCopy,
     };
 
     if (format?.id) {
@@ -90,6 +93,18 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({
           placeholder="e.g., [{title}]({url})"
           rows={3}
         />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="format-auto-copy" className="checkbox-label">
+          <input
+            id="format-auto-copy"
+            type="checkbox"
+            checked={autoCopy}
+            onChange={(e) => setAutoCopy(e.target.checked)}
+          />
+          <span>Auto Copy (Automatically copy when extension opens)</span>
+        </label>
       </div>
 
       {preview && (
