@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // Mock Chrome API
-global.chrome = {
+(globalThis as any).chrome = {
   storage: {
     local: {
       get: vi.fn(),
@@ -26,4 +26,4 @@ global.chrome = {
 } as any;
 
 // Mock window.confirm
-global.confirm = vi.fn(() => true);
+(globalThis as any).confirm = vi.fn(() => true);

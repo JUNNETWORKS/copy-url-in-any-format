@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 // Handle extension icon click (if popup is not set)
-chrome.action.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener(() => {
   // This will not be called if default_popup is set in manifest.json
   console.log('Extension icon clicked');
 });

@@ -33,7 +33,8 @@
       "Bash(# Verify that Stripe-related variables have been removed\necho \"\"Verifying removal of Stripe-related variables...\"\"\nfor file in .env.dev .env.qa .env.qa2 .env.sb .env.sb2 .env.sb3 .env.prod .env.e2e-on-gha; do\n    if [ -f \"\"$file\"\" ]; then\n        echo -e \"\"\\n=== $file ===\"\"\n        if grep -q -E \"\"^(NEXT_PUBLIC_STRIPE_RETURN_ORIGIN|NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY|STRIPE_ACCOUNT_FOR_CHARGE|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_CHARGE|STRIPE_ACCOUNT_FOR_TICKET|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_TICKET|STRIPE_ACCOUNT_FOR_GENERAL|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_GENERAL|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET)=\"\" \"\"$file\"\"; then\n            echo \"\"ERROR: Stripe variables still found!\"\"\n            grep -E \"\"^(NEXT_PUBLIC_STRIPE_RETURN_ORIGIN|NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY|STRIPE_ACCOUNT_FOR_CHARGE|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_CHARGE|STRIPE_ACCOUNT_FOR_TICKET|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_TICKET|STRIPE_ACCOUNT_FOR_GENERAL|NEXT_PUBLIC_STRIPE_ACCOUNT_FOR_GENERAL|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET)=\"\" \"\"$file\"\"\n        else\n            echo \"\"✓ All Stripe variables successfully removed\"\"\n        fi\n    fi\ndone)",
       "Bash(gh pr view:*)",
       "Bash(cp:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "WebFetch(domain:zenn.dev)"
     ],
     "deny": []
   }
