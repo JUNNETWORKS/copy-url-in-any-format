@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Guidelines
 
-- 変更毎に `npm run tsc` と `npm run test` を実行し、それらが PASS する状態にしてください。
+- 変更毎に `npm run tsc` と `npm run test:run` を実行し、それらが PASS する状態にしてください。
 - Issue や PullRequest は `gh` コマンドを利用して操作を行ってください。
 - コミットを実行する前に必ずユーザーにコミット内容の確認を行ってください。
 - `as any` などの型アサーションは禁止です。型ガード関数などを用いて、型の安全性を保つ実装を行ってください。
@@ -20,6 +20,7 @@ Chrome拡張機能（Manifest V3）で、現在のページURLを様々なフォ
 npm run dev        # 開発サーバー起動（ホットリロード対応）
 npm run build      # プロダクションビルド（distフォルダーに出力）
 npm run preview    # ビルド結果のプレビュー
+npm run tsc        # TypeScriptの型チェック（重要：変更毎に実行）
 ```
 
 ### テスト
@@ -72,7 +73,7 @@ npm run format     # Prettierでコード整形
 
 ### Chrome拡張機能の構成
 
-- **manifest.json**: Manifest V3形式
+- **manifest.config.ts**: Manifest V3の定義（@crxjs/vite-pluginで使用）
 - **エントリーポイント**:
   - `popup.html` → `src/popup/index.tsx`
   - `options.html` → `src/options/index.tsx`
@@ -84,12 +85,14 @@ npm run format     # Prettierでコード整形
 - **コンポーネントテスト**: React Testing Library使用
 - **Chrome APIモック**: `src/test/setup.ts`で定義
 - **テストファースト開発**: 機能実装前にテストを作成
+- **Vitest設定**: vite.config.ts内に統合（別ファイルの場合はvitest.config.ts）
 
 ### ビルド設定
 
-- **Vite**: 高速ビルドツール
-  - マルチエントリーポイント設定（popup, options, background）
-  - 出力ファイル名の固定化（[name].js形式）
+- **Vite + @crxjs/vite-plugin**: Chrome拡張機能専用のビルドツール
+  - manifest.config.tsからマニフェストを自動生成
+  - 開発時のホットリロード対応
+  - zip出力プラグインでリリース用アーカイブ生成
 - **TypeScript**: 厳格な型チェック設定
 - **React**: JSX変換設定済み
 
