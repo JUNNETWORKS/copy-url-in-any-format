@@ -5,14 +5,16 @@ import { formatUrl } from '../../shared/formatters';
 interface FormatListProps {
   formats: Format[];
   pageInfo: PageInfo;
+  autoCopiedFormatId?: string | null;
 }
 
 export const FormatList: React.FC<FormatListProps> = ({
   formats,
   pageInfo,
+  autoCopiedFormatId,
 }) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(autoCopiedFormatId || null);
+  const [copiedId, setCopiedId] = useState<string | null>(autoCopiedFormatId || null);
   const [errorId, setErrorId] = useState<string | null>(null);
 
   const handleCopy = async (format: Format) => {

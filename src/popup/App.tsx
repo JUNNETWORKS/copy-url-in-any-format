@@ -9,7 +9,7 @@ export const Popup: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [autoCopied, setAutoCopied] = useState(false);
+  const [autoCopiedFormatId, setAutoCopiedFormatId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -44,11 +44,7 @@ export const Popup: React.FC = () => {
             url: activeTab.url,
           }, autoCopyFormat);
           await navigator.clipboard.writeText(formattedUrl);
-          setAutoCopied(true);
-          // Automatically close popup after 1 second
-          setTimeout(() => {
-            window.close();
-          }, 1000);
+          setAutoCopiedFormatId(autoCopyFormat.id);
         }
       } catch (err) {
         setError('Failed to load formats');
@@ -65,12 +61,10 @@ export const Popup: React.FC = () => {
     chrome.runtime.openOptionsPage();
   };
 
-  if (loading || autoCopied) {
+  if (loading) {
     return (
       <div className="popup-container">
-        <div className="loading">
-          {autoCopied ? 'Copied!' : 'Loading...'}
-        </div>
+        <div className="loading">Loading...</div>
       </div>
     );
   }
@@ -92,7 +86,11 @@ export const Popup: React.FC = () => {
         </button>
       </header>
       <main className="popup-main">
-        <FormatList formats={formats} pageInfo={pageInfo} />
+        <FormatList 
+          formats={formats} 
+          pageInfo={pageInfo} 
+          autoCopiedFormatId={autoCopiedFormatId}
+        />
       </main>
     </div>
   );
