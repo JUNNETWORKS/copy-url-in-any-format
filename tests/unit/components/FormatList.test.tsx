@@ -33,15 +33,17 @@ describe('FormatList', () => {
     expect(screen.getByText('HTML')).toBeInTheDocument();
   });
 
-  it('should show preview on hover', async () => {
+  it('should show preview on click', async () => {
     render(<FormatList formats={mockFormats} pageInfo={mockPageInfo} />);
     
-    const markdownButton = screen.getByText('Markdown');
-    fireEvent.mouseEnter(markdownButton);
+    // Initially shows placeholder text
+    expect(screen.getByText('Select a format to preview')).toBeInTheDocument();
     
-    await waitFor(() => {
-      expect(screen.getByText('[Test Page](https://example.com)')).toBeInTheDocument();
-    });
+    const markdownButton = screen.getByText('Markdown');
+    fireEvent.click(markdownButton);
+    
+    // Preview should update after click
+    expect(screen.getByText('[Test Page](https://example.com)')).toBeInTheDocument();
   });
 
   it('should copy to clipboard on click', async () => {

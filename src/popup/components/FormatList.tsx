@@ -11,7 +11,7 @@ export const FormatList: React.FC<FormatListProps> = ({
   formats,
   pageInfo,
 }) => {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [errorId, setErrorId] = useState<string | null>(null);
 
@@ -42,30 +42,40 @@ export const FormatList: React.FC<FormatListProps> = ({
     return <div className="empty-state">No formats available</div>;
   }
 
-  return (
-    <div className="format-list">
-      {formats.map((format) => {
-        const preview =
-          hoveredId === format.id ? formatUrl(pageInfo, format) : null;
-        const isCopied = copiedId === format.id;
-        const hasError = errorId === format.id;
+  const selectedFormat = formats.find(f => f.id === selectedId);
+  const previewText = selectedFormat ? formatUrl(pageInfo, selectedFormat) : '';
 
-        return (
-          <div key={format.id} className="format-item">
-            <button
-              className="format-button"
-              onClick={() => handleCopy(format)}
-              onMouseEnter={() => setHoveredId(format.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              <span className="format-name">{format.name}</span>
-              {isCopied && <span className="status">Copied!</span>}
-              {hasError && <span className="status error">Failed to copy</span>}
-            </button>
-            {preview && <div className="preview">{preview}</div>}
-          </div>
-        );
-      })}
+  return (
+    <div>
+      <div className="preview-box">
+        <div className="preview-label">Preview:</div>
+        <div className="preview-content">
+          {previewText || 'Select a format to preview'}
+        </div>
+      </div>
+      <div className="format-list">
+        {formats.map((format) => {
+          const isCopied = copiedId === format.id;
+          const hasError = errorId === format.id;
+          const isSelected = selectedId === format.id;
+
+          return (
+            <div key={format.id} className="format-item">
+              <button
+                className={`format-button ${isSelected ? 'selected' : ''}`}
+                onClick={() => {
+                  setSelectedId(format.id);
+                  handleCopy(format);
+                }}
+              >
+                <span className="format-name">{format.name}</span>
+                {isCopied && <span className="status">Copied!</span>}
+                {hasError && <span className="status error">Failed to copy</span>}
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
