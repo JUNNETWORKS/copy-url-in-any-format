@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Development Guidelines
+
+- 変更毎に `npm run tsc` と `npm run test` を実行し、それらが PASS する状態にしてください。
+- Issue や PullRequest は `gh` コマンドを利用して操作を行ってください。
+- コミットを実行する前に必ずユーザーにコミット内容の確認を行ってください。
+- `as any` などの型アサーションは禁止です。型ガード関数などを用いて、型の安全性を保つ実装を行ってください。
+
 ## プロジェクト概要
 
 Chrome拡張機能（Manifest V3）で、現在のページURLを様々なフォーマットでコピーできる機能を提供します。TypeScript + React + Viteで構築され、テスト駆動開発（TDD）で実装されています。
