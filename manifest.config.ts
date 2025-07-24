@@ -13,11 +13,17 @@ export const manifest = defineManifest({
   action: {
     default_popup: 'popup.html',
     default_icon: {
-      48: 'assets/icon-placeholder.svg',
+      16: 'assets/icon-16x16.png',
+      32: 'assets/icon-32x32.png',
+      48: 'assets/icon-48x48.png',
+      128: 'assets/icon-128x128.png',
     },
   },
   icons: {
-    48: 'assets/icon-placeholder.svg',
+    16: 'assets/icon-16x16.png',
+    32: 'assets/icon-32x32.png',
+    48: 'assets/icon-48x48.png',
+    128: 'assets/icon-128x128.png',
   },
   options_page: 'options.html',
   background: {
