@@ -68,16 +68,14 @@ describe('Popup', () => {
     });
   });
 
-  it('should use default formats when no custom formats exist', async () => {
+  it('should show empty state when no formats exist', async () => {
     vi.mocked(chrome.storage.local.get).mockResolvedValue({});
     
     render(<Popup />);
     
     await waitFor(() => {
-      // Should show default formats
-      expect(screen.getByText('Markdown')).toBeInTheDocument();
-      expect(screen.getByText('HTML')).toBeInTheDocument();
-      expect(screen.getByText('Plain URL')).toBeInTheDocument();
+      // Should show empty state when no formats are in storage
+      expect(screen.getByText('No formats available')).toBeInTheDocument();
     });
   });
 });

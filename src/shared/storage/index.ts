@@ -55,47 +55,28 @@ export class FormatStorage {
   }
 
   async getFormatsWithDefaults(): Promise<Format[]> {
-    const customFormats = await this.getFormats();
-    const defaultFormats = this.getDefaultFormats();
-
-    // Merge custom formats with defaults, custom formats come first
-    const allFormats = [...customFormats];
-
-    // Add default formats that don't exist in custom formats
-    defaultFormats.forEach((defaultFormat) => {
-      if (!allFormats.some((f) => f.name === defaultFormat.name)) {
-        allFormats.push(defaultFormat);
-      }
-    });
-
-    return allFormats;
+    // Since default formats are now stored in storage on first install,
+    // we can simply return all formats from storage
+    return await this.getFormats();
   }
 
-  private getDefaultFormats(): Format[] {
+  async addFormat(
+    format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<Format> {
+    const formats = await this.getFormats();
     const now = Date.now();
-    return [
-      {
-        id: 'default-markdown',
-        name: 'Markdown',
-        template: '[{title}]({url})',
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        id: 'default-html',
-        name: 'HTML',
-        template: '<a href="{url}">{title}</a>',
-        createdAt: now,
-        updatedAt: now,
-      },
-      {
-        id: 'default-plain-url',
-        name: 'Plain URL',
-        template: '{url}',
-        createdAt: now,
-        updatedAt: now,
-      },
-    ];
+
+    const newFormat: Format = {
+      id: this.generateId(),
+      name: format.name,
+      template: format.template,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    formats.push(newFormat);
+    await chrome.storage.local.set({ [this.STORAGE_KEY]: formats });
+    return newFormat;
   }
 
   private generateId(): string {

@@ -148,33 +148,85 @@ describe('FormatStorage', () => {
     });
   });
 
-  describe('getDefaultFormats', () => {
-    it('should return default formats when no custom formats exist', async () => {
+  describe('getFormatsWithDefaults', () => {
+    it('should return all formats from storage', async () => {
+      const storedFormats: Format[] = [
+        {
+          id: 'format-1',
+          name: 'Markdown',
+          template: '[{title}]({url})',
+          createdAt: 1000,
+          updatedAt: 1000,
+        },
+        {
+          id: 'format-2',
+          name: 'Custom Format',
+          template: 'Custom: {title}',
+          createdAt: 2000,
+          updatedAt: 2000,
+        },
+      ];
+
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: storedFormats });
+      
+      const formats = await storage.getFormatsWithDefaults();
+      
+      expect(formats).toEqual(storedFormats);
+      expect(formats.length).toBe(2);
+    });
+
+    it('should return empty array when no formats exist', async () => {
       vi.mocked(chrome.storage.local.get).mockResolvedValue({});
       
       const formats = await storage.getFormatsWithDefaults();
       
-      expect(formats.length).toBeGreaterThan(0);
-      expect(formats.some(f => f.name === 'Markdown')).toBe(true);
-      expect(formats.some(f => f.name === 'HTML')).toBe(true);
-      expect(formats.some(f => f.name === 'Plain URL')).toBe(true);
+      expect(formats).toEqual([]);
+    });
+  });
+
+  describe('addFormat', () => {
+    it('should add a new format', async () => {
+      const existingFormats: Format[] = [];
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: existingFormats });
+      
+      const newFormat = {
+        name: 'Test Format',
+        template: 'Test: {title}',
+      };
+      
+      const result = await storage.addFormat(newFormat);
+      
+      expect(result.name).toBe(newFormat.name);
+      expect(result.template).toBe(newFormat.template);
+      expect(result.id).toBeTruthy();
+      expect(result.createdAt).toBeTruthy();
+      expect(result.updatedAt).toBeTruthy();
+      
+      expect(chrome.storage.local.set).toHaveBeenCalledWith({
+        formats: [result],
+      });
     });
 
-    it('should merge custom formats with defaults', async () => {
-      const customFormat: Format = {
-        id: 'custom-1',
-        name: 'Custom Format',
-        template: 'Custom: {title}',
+    it('should append to existing formats', async () => {
+      const existingFormat: Format = {
+        id: 'existing-1',
+        name: 'Existing',
+        template: '{title}',
         createdAt: 1000,
         updatedAt: 1000,
       };
-
-      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: [customFormat] });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: [existingFormat] });
       
-      const formats = await storage.getFormatsWithDefaults();
+      const newFormat = {
+        name: 'New Format',
+        template: 'New: {title}',
+      };
       
-      expect(formats.some(f => f.name === 'Custom Format')).toBe(true);
-      expect(formats.some(f => f.name === 'Markdown')).toBe(true);
+      const result = await storage.addFormat(newFormat);
+      
+      expect(chrome.storage.local.set).toHaveBeenCalledWith({
+        formats: [existingFormat, result],
+      });
     });
   });
 });
