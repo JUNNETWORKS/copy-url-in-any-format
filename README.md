@@ -1,63 +1,64 @@
 # Copy URL in any format
 
-Chrome拡張機能で、現在のページのURLを様々なフォーマットでコピーできます。
+A Chrome extension that allows you to copy the current page's URL in various formats.
 
-## 機能
+## Features
 
-- **プリセットフォーマット**: Markdown、HTML、プレーンURLなどの一般的なフォーマットをサポート
-- **カスタムフォーマット**: 独自のフォーマットを作成・保存
-- **簡単操作**: 拡張機能アイコンをクリックして、ワンクリックでコピー
-- **プレビュー機能**: フォーマットにマウスオーバーすると実際の出力をプレビュー
-- **設定管理**: 設定画面でフォーマットの追加・編集・削除が可能
+- **Preset Formats**: Support for common formats like Markdown, HTML, plain URL, etc.
+- **Custom Formats**: Create and save your own custom formats
+- **Easy Operation**: Click the extension icon for one-click copying
+- **Preview Feature**: Hover over a format to preview the actual output
+- **Settings Management**: Add, edit, and delete formats from the settings page
+- **Auto Copy**: Automatically copy when clicking a format (configurable)
 
-## インストール方法
+## Installation
 
-### 開発版のインストール
+### Development Version Installation
 
-1. このリポジトリをクローン
+1. Clone this repository
 ```bash
 git clone https://github.com/yourusername/copy-url-in-any-format.git
 cd copy-url-in-any-format
 ```
 
-2. 依存関係をインストール
+2. Install dependencies
 ```bash
 mise install
 npm install
 ```
 
-3. 拡張機能をビルド
+3. Build the extension
 ```bash
 npm run build
 ```
 
-4. Chromeで拡張機能を読み込み
-   - Chrome の設定メニューから「その他のツール」→「拡張機能」を開く
-   - 右上の「デベロッパーモード」をオンにする
-   - 「パッケージ化されていない拡張機能を読み込む」をクリック
-   - ビルドした `dist` フォルダーを選択
+4. Load the extension in Chrome
+   - Open Chrome settings menu → "More tools" → "Extensions"
+   - Turn on "Developer mode" in the top right
+   - Click "Load unpacked"
+   - Select the built `dist` folder
 
-## 使い方
+## Usage
 
-### URLをコピー
-1. コピーしたいページを開く
-2. 拡張機能のアイコンをクリック
-3. 使いたいフォーマットをクリック
-4. クリップボードにコピーされます
+### Copying URLs
+1. Open the page you want to copy
+2. Click the extension icon
+3. Click the format you want to use
+4. The formatted URL is copied to your clipboard
 
-### フォーマットの管理
-1. 拡張機能のアイコンを右クリック
-2. 「オプション」を選択
-3. 設定画面でフォーマットを管理
-   - 新規追加: 「Add New Format」ボタンをクリック
-   - 編集: 各フォーマットの「Edit」ボタンをクリック
-   - 削除: 各フォーマットの「Delete」ボタンをクリック
+### Managing Formats
+1. Right-click the extension icon
+2. Select "Options"
+3. Manage formats on the settings page
+   - Add new: Click the "Add New Format" button
+   - Edit: Click the "Edit" button for each format
+   - Delete: Click the "Delete" button for each format
 
-### 利用可能な変数
-- `{title}` - ページのタイトル
-- `{url}` - ページのURL
+### Available Variables
+- `{title}` - Page title
+- `{url}` - Page URL
 
-### フォーマット例
+### Format Examples
 - Markdown: `[{title}]({url})`
 - HTML: `<a href="{url}">{title}</a>`
 - Textile: `"{title}":{url}`
@@ -65,93 +66,93 @@ npm run build
 - AsciiDoc: `link:{url}[{title}]`
 - Org-mode: `[[{url}][{title}]]`
 
-## 開発
+## Development
 
-### 必要な環境
-- Node.js 20.11.0 以上
-- Chrome ブラウザ
+### Requirements
+- Node.js 20.11.0 or higher
+- Chrome browser
 
-### セットアップ
+### Setup
 ```bash
-# Mise を使用している場合
+# If using Mise
 mise install
 
-# 依存関係のインストール
+# Install dependencies
 npm install
 ```
 
-### 開発用コマンド
+### Development Commands
 
 ```bash
-# 開発サーバーの起動（ホットリロード対応）
+# Start development server (with hot reload)
 npm run dev
 
-# プロダクションビルド
+# Production build
 npm run build
 
-# テストの実行
+# Run tests
 npm test
 
-# テストの実行（UIモード）
+# Run tests (UI mode)
 npm run test:ui
 
-# テストの実行（カバレッジ付き）
+# Run tests with coverage
 npm run coverage
 
-# Lintの実行
+# Run lint
 npm run lint
 
-# コードフォーマット
+# Format code
 npm run format
 ```
 
-### プロジェクト構造
+### Project Structure
 ```
 copy-url-in-any-format/
 ├── src/
-│   ├── background/          # サービスワーカー
-│   ├── popup/              # ポップアップUI
+│   ├── background/          # Service worker
+│   ├── popup/              # Popup UI
 │   │   ├── App.tsx
 │   │   ├── components/
 │   │   └── styles.css
-│   ├── options/            # 設定画面UI
+│   ├── options/            # Settings page UI
 │   │   ├── App.tsx
 │   │   ├── components/
 │   │   └── styles.css
-│   ├── shared/             # 共通ロジック
-│   │   ├── formatters/     # フォーマット処理
-│   │   ├── storage/        # ストレージ管理
-│   │   └── types/          # 型定義
-│   └── test/               # テスト設定
-├── tests/                  # テストファイル
+│   ├── shared/             # Shared logic
+│   │   ├── formatters/     # Format processing
+│   │   ├── storage/        # Storage management
+│   │   └── types/          # Type definitions
+│   └── test/               # Test configuration
+├── tests/                  # Test files
 │   └── unit/
-├── assets/                 # アイコン等
-├── manifest.json           # Chrome拡張機能マニフェスト
+├── assets/                 # Icons, etc.
+├── manifest.json           # Chrome extension manifest
 ├── popup.html
 ├── options.html
 └── vite.config.ts
 
 ```
 
-### テスト
+### Testing
 
-このプロジェクトはテスト駆動開発（TDD）で作成されています。
+This project is developed using Test-Driven Development (TDD).
 
 ```bash
-# すべてのテストを実行
+# Run all tests
 npm test
 
-# 特定のテストファイルを実行
+# Run specific test file
 npm test tests/unit/formatters.test.ts
 
-# ウォッチモードでテスト実行
+# Run tests in watch mode
 npm test -- --watch
 ```
 
-## ライセンス
+## License
 
 MIT License
 
-## 貢献
+## Contributing
 
-プルリクエストを歓迎します。大きな変更の場合は、まずissueを作成して変更内容について議論してください。
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
