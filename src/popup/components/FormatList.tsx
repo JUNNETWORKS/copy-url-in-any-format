@@ -7,19 +7,22 @@ interface FormatListProps {
   pageInfo: PageInfo;
 }
 
-export const FormatList: React.FC<FormatListProps> = ({ formats, pageInfo }) => {
+export const FormatList: React.FC<FormatListProps> = ({
+  formats,
+  pageInfo,
+}) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [errorId, setErrorId] = useState<string | null>(null);
 
   const handleCopy = async (format: Format) => {
     const formattedText = formatUrl(pageInfo, format);
-    
+
     try {
       await navigator.clipboard.writeText(formattedText);
       setCopiedId(format.id);
       setErrorId(null);
-      
+
       // Reset after 2 seconds
       setTimeout(() => {
         setCopiedId(null);
@@ -27,7 +30,7 @@ export const FormatList: React.FC<FormatListProps> = ({ formats, pageInfo }) => 
     } catch (error) {
       setErrorId(format.id);
       setCopiedId(null);
-      
+
       // Reset after 2 seconds
       setTimeout(() => {
         setErrorId(null);
@@ -42,7 +45,8 @@ export const FormatList: React.FC<FormatListProps> = ({ formats, pageInfo }) => 
   return (
     <div className="format-list">
       {formats.map((format) => {
-        const preview = hoveredId === format.id ? formatUrl(pageInfo, format) : null;
+        const preview =
+          hoveredId === format.id ? formatUrl(pageInfo, format) : null;
         const isCopied = copiedId === format.id;
         const hasError = errorId === format.id;
 
@@ -58,11 +62,7 @@ export const FormatList: React.FC<FormatListProps> = ({ formats, pageInfo }) => 
               {isCopied && <span className="status">Copied!</span>}
               {hasError && <span className="status error">Failed to copy</span>}
             </button>
-            {preview && (
-              <div className="preview">
-                {preview}
-              </div>
-            )}
+            {preview && <div className="preview">{preview}</div>}
           </div>
         );
       })}

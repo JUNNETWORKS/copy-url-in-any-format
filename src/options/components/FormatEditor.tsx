@@ -4,11 +4,17 @@ import { formatUrl } from '../../shared/formatters';
 
 interface FormatEditorProps {
   format?: Format;
-  onSave: (format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>) => void;
+  onSave: (
+    format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>
+  ) => void;
   onCancel: () => void;
 }
 
-export const FormatEditor: React.FC<FormatEditorProps> = ({ format, onSave, onCancel }) => {
+export const FormatEditor: React.FC<FormatEditorProps> = ({
+  format,
+  onSave,
+  onCancel,
+}) => {
   const [name, setName] = useState(format?.name || '');
   const [template, setTemplate] = useState(format?.template || '');
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +32,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({ format, onSave, onCa
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       setError('Name is required');
       return;
@@ -37,7 +43,8 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({ format, onSave, onCa
       return;
     }
 
-    const formatData: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format> = {
+    const formatData: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> &
+      Partial<Format> = {
       name: name.trim(),
       template: template.trim(),
     };
@@ -50,13 +57,15 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({ format, onSave, onCa
     onSave(formatData);
   };
 
-  const preview = template ? formatUrl(examplePageInfo, {
-    id: '',
-    name: '',
-    template,
-    createdAt: 0,
-    updatedAt: 0,
-  }) : '';
+  const preview = template
+    ? formatUrl(examplePageInfo, {
+        id: '',
+        name: '',
+        template,
+        createdAt: 0,
+        updatedAt: 0,
+      })
+    : '';
 
   return (
     <form className="format-editor" onSubmit={handleSubmit}>
@@ -90,9 +99,7 @@ export const FormatEditor: React.FC<FormatEditorProps> = ({ format, onSave, onCa
         </div>
       )}
 
-      {error && (
-        <div className="error-message">{error}</div>
-      )}
+      {error && <div className="error-message">{error}</div>}
 
       <div className="form-actions">
         <button type="submit" className="save-button">

@@ -13,8 +13,11 @@ export const Popup: React.FC = () => {
     const loadData = async () => {
       try {
         // Get current tab info
-        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        
+        const [activeTab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+
         if (!activeTab || !activeTab.url || !activeTab.title) {
           setError('Unable to get page information');
           setLoading(false);

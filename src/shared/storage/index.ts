@@ -10,16 +10,18 @@ export class FormatStorage {
 
   async getFormat(id: string): Promise<Format | null> {
     const formats = await this.getFormats();
-    return formats.find(f => f.id === id) || null;
+    return formats.find((f) => f.id === id) || null;
   }
 
-  async saveFormat(format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>): Promise<Format> {
+  async saveFormat(
+    format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>
+  ): Promise<Format> {
     const formats = await this.getFormats();
     const now = Date.now();
 
     if (format.id) {
       // Update existing format
-      const index = formats.findIndex(f => f.id === format.id);
+      const index = formats.findIndex((f) => f.id === format.id);
       if (index !== -1) {
         const updatedFormat: Format = {
           ...formats[index],
@@ -48,20 +50,20 @@ export class FormatStorage {
 
   async deleteFormat(id: string): Promise<void> {
     const formats = await this.getFormats();
-    const filteredFormats = formats.filter(f => f.id !== id);
+    const filteredFormats = formats.filter((f) => f.id !== id);
     await chrome.storage.local.set({ [this.STORAGE_KEY]: filteredFormats });
   }
 
   async getFormatsWithDefaults(): Promise<Format[]> {
     const customFormats = await this.getFormats();
     const defaultFormats = this.getDefaultFormats();
-    
+
     // Merge custom formats with defaults, custom formats come first
     const allFormats = [...customFormats];
-    
+
     // Add default formats that don't exist in custom formats
-    defaultFormats.forEach(defaultFormat => {
-      if (!allFormats.some(f => f.name === defaultFormat.name)) {
+    defaultFormats.forEach((defaultFormat) => {
+      if (!allFormats.some((f) => f.name === defaultFormat.name)) {
         allFormats.push(defaultFormat);
       }
     });

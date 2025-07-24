@@ -26,7 +26,9 @@ export const Options: React.FC = () => {
     }
   };
 
-  const handleSave = async (format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>) => {
+  const handleSave = async (
+    format: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> & Partial<Format>
+  ) => {
     try {
       await storage.saveFormat(format);
       await loadFormats();
@@ -66,10 +68,7 @@ export const Options: React.FC = () => {
           <div className="section-header">
             <h2>Formats</h2>
             {!isAdding && !editingFormat && (
-              <button
-                className="add-button"
-                onClick={() => setIsAdding(true)}
-              >
+              <button className="add-button" onClick={() => setIsAdding(true)}>
                 Add New Format
               </button>
             )}
@@ -118,8 +117,12 @@ export const Options: React.FC = () => {
         <section className="help-section">
           <h2>Available Variables</h2>
           <ul>
-            <li><code>{'{title}'}</code> - The page title</li>
-            <li><code>{'{url}'}</code> - The page URL</li>
+            <li>
+              <code>{'{title}'}</code> - The page title
+            </li>
+            <li>
+              <code>{'{url}'}</code> - The page URL
+            </li>
           </ul>
         </section>
       </main>
