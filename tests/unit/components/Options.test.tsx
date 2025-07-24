@@ -10,7 +10,7 @@ describe('Options', () => {
   });
 
   it('should render options page with title', async () => {
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({}));
     
     render(<Options />);
     
@@ -30,7 +30,7 @@ describe('Options', () => {
       },
     ];
 
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({ formats: mockFormats }));
     
     render(<Options />);
     
@@ -41,7 +41,7 @@ describe('Options', () => {
   });
 
   it('should add new format', async () => {
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({}));
     
     render(<Options />);
     
@@ -78,7 +78,7 @@ describe('Options', () => {
       },
     ];
 
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({ formats: mockFormats }));
     
     render(<Options />);
     
@@ -113,7 +113,7 @@ describe('Options', () => {
       },
     ];
 
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({ formats: mockFormats }));
     
     render(<Options />);
     
@@ -136,7 +136,7 @@ describe('Options', () => {
   });
 
   it('should show preview when editing', async () => {
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({}));
     
     render(<Options />);
     
@@ -159,7 +159,7 @@ describe('Options', () => {
   });
 
   it('should validate format name is required', async () => {
-    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => Promise.resolve({}));
     
     render(<Options />);
     

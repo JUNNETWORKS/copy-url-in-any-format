@@ -28,14 +28,27 @@ describe('Background Script', () => {
           addListener: vi.fn((handler) => {
             onInstalledHandler = handler;
           }),
-        },
+          getRules: vi.fn(),
+          hasListener: vi.fn(),
+          removeRules: vi.fn(),
+          addRules: vi.fn(),
+          removeListener: vi.fn(),
+          hasListeners: vi.fn(),
+        } as unknown as chrome.events.Event<(details: chrome.runtime.InstalledDetails) => void>,
       },
       action: {
+        ...global.chrome.action,
         onClicked: {
           addListener: vi.fn(),
-        },
+          getRules: vi.fn(),
+          hasListener: vi.fn(),
+          removeRules: vi.fn(),
+          addRules: vi.fn(),
+          removeListener: vi.fn(),
+          hasListeners: vi.fn(),
+        } as unknown as chrome.events.Event<(tab: chrome.tabs.Tab) => void>,
       },
-    };
+    } as unknown as typeof chrome;
   });
 
   afterEach(() => {

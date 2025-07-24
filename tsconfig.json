@@ -23,6 +23,6 @@
     /* Chrome Extension */
     "types": ["chrome"]
   },
-  "include": ["src"],
+  "include": ["src", "tests/"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
