@@ -121,15 +121,14 @@ describe('Options', () => {
       expect(screen.getByText('Markdown')).toBeInTheDocument();
     });
 
+    // Mock window.confirm to return true
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+
     // Click delete button
     fireEvent.click(screen.getByLabelText('Delete Markdown'));
 
-    // Confirm deletion
-    await waitFor(() => {
-      expect(screen.getByText('Are you sure?')).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByText('Yes, delete'));
+    // Check that confirm was called
+    expect(confirmSpy).toHaveBeenCalledWith('Are you sure?');
 
     await waitFor(() => {
       expect(chrome.storage.local.set).toHaveBeenCalledWith({ formats: [] });
@@ -141,11 +140,17 @@ describe('Options', () => {
     
     render(<Options />);
     
+    // Wait for page to load
+    await waitFor(() => {
+      expect(screen.getByText('Add New Format')).toBeInTheDocument();
+    });
+    
     // Click add button
     fireEvent.click(screen.getByText('Add New Format'));
 
     const templateInput = screen.getByLabelText('Template');
-    await userEvent.type(templateInput, '[{title}]({url})');
+    // Use fireEvent instead of userEvent for special characters
+    fireEvent.change(templateInput, { target: { value: '[{title}]({url})' } });
 
     await waitFor(() => {
       expect(screen.getByText('Preview:')).toBeInTheDocument();
@@ -157,6 +162,11 @@ describe('Options', () => {
     (chrome.storage.local.get as any).mockResolvedValue({});
     
     render(<Options />);
+    
+    // Wait for page to load
+    await waitFor(() => {
+      expect(screen.getByText('Add New Format')).toBeInTheDocument();
+    });
     
     // Click add button
     fireEvent.click(screen.getByText('Add New Format'));

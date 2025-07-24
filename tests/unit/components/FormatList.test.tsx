@@ -3,13 +3,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FormatList } from '../../../src/popup/components/FormatList';
 import type { Format, PageInfo } from '../../../src/shared/types';
 
-// Mock navigator.clipboard
-Object.assign(navigator, {
-  clipboard: {
-    writeText: vi.fn(),
-  },
-});
-
 describe('FormatList', () => {
   const mockFormats: Format[] = [
     {
