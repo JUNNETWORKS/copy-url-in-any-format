@@ -55,9 +55,10 @@
 .preview-content {
   font-size: 13px;
   font-family: monospace;
-  word-break: break-all;
   color: #333;
-  min-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .format-list {
