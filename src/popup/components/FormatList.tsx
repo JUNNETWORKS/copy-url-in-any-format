@@ -16,6 +16,7 @@ export const FormatList: React.FC<FormatListProps> = ({
   const [selectedId, setSelectedId] = useState<string | null>(autoCopiedFormatId || null);
   const [copiedId, setCopiedId] = useState<string | null>(autoCopiedFormatId || null);
   const [errorId, setErrorId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const handleCopy = async (format: Format) => {
     const formattedText = formatUrl(pageInfo, format);
@@ -44,8 +45,8 @@ export const FormatList: React.FC<FormatListProps> = ({
     return <div className="empty-state">No formats available</div>;
   }
 
-  const selectedFormat = formats.find(f => f.id === selectedId);
-  const previewText = selectedFormat ? formatUrl(pageInfo, selectedFormat) : '';
+  const previewFormat = formats.find(f => f.id === (hoveredId || selectedId));
+  const previewText = previewFormat ? formatUrl(pageInfo, previewFormat) : '';
 
   return (
     <div>
@@ -69,6 +70,8 @@ export const FormatList: React.FC<FormatListProps> = ({
                   setSelectedId(format.id);
                   handleCopy(format);
                 }}
+                onMouseEnter={() => setHoveredId(format.id)}
+                onMouseLeave={() => setHoveredId(null)}
               >
                 <span className="format-name">{format.name}</span>
                 {isCopied && <span className="status">Copied!</span>}
