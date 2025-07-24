@@ -12,7 +12,7 @@ vi.mock('../../src/shared/storage', () => ({
 }));
 
 describe('Background Script', () => {
-  let onInstalledHandler: Function;
+  let onInstalledHandler: (details: chrome.runtime.InstalledDetails) => void | Promise<void>;
 
   beforeEach(() => {
     vi.clearAllMocks();
