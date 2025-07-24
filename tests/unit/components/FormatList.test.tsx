@@ -73,7 +73,7 @@ describe('FormatList', () => {
   });
 
   it('should handle copy error', async () => {
-    (navigator.clipboard.writeText as any).mockRejectedValueOnce(new Error('Copy failed'));
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('Copy failed'));
     
     render(<FormatList formats={mockFormats} pageInfo={mockPageInfo} />);
     

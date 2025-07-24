@@ -12,7 +12,7 @@ describe('FormatStorage', () => {
 
   describe('getFormats', () => {
     it('should return empty array when no formats exist', async () => {
-      (chrome.storage.local.get as any).mockResolvedValue({});
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({});
       
       const formats = await storage.getFormats();
       expect(formats).toEqual([]);
@@ -36,7 +36,7 @@ describe('FormatStorage', () => {
         },
       ];
 
-      (chrome.storage.local.get as any).mockResolvedValue({ formats: mockFormats });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
       
       const formats = await storage.getFormats();
       expect(formats).toEqual(mockFormats);
@@ -45,7 +45,7 @@ describe('FormatStorage', () => {
 
   describe('getFormat', () => {
     it('should return null when format does not exist', async () => {
-      (chrome.storage.local.get as any).mockResolvedValue({});
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({});
       
       const format = await storage.getFormat('1');
       expect(format).toBeNull();
@@ -62,7 +62,7 @@ describe('FormatStorage', () => {
         },
       ];
 
-      (chrome.storage.local.get as any).mockResolvedValue({ formats: mockFormats });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
       
       const format = await storage.getFormat('1');
       expect(format).toEqual(mockFormats[0]);
@@ -71,7 +71,7 @@ describe('FormatStorage', () => {
 
   describe('saveFormat', () => {
     it('should add new format', async () => {
-      (chrome.storage.local.get as any).mockResolvedValue({});
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({});
       
       const newFormat: Omit<Format, 'id' | 'createdAt' | 'updatedAt'> = {
         name: 'Markdown',
@@ -102,7 +102,7 @@ describe('FormatStorage', () => {
         updatedAt: 1000,
       };
 
-      (chrome.storage.local.get as any).mockResolvedValue({ formats: [existingFormat] });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: [existingFormat] });
       
       const updatedFormat = await storage.saveFormat({
         ...existingFormat,
@@ -138,7 +138,7 @@ describe('FormatStorage', () => {
         },
       ];
 
-      (chrome.storage.local.get as any).mockResolvedValue({ formats: mockFormats });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
       
       await storage.deleteFormat('1');
       
@@ -150,7 +150,7 @@ describe('FormatStorage', () => {
 
   describe('getDefaultFormats', () => {
     it('should return default formats when no custom formats exist', async () => {
-      (chrome.storage.local.get as any).mockResolvedValue({});
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({});
       
       const formats = await storage.getFormatsWithDefaults();
       
@@ -169,7 +169,7 @@ describe('FormatStorage', () => {
         updatedAt: 1000,
       };
 
-      (chrome.storage.local.get as any).mockResolvedValue({ formats: [customFormat] });
+      vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: [customFormat] });
       
       const formats = await storage.getFormatsWithDefaults();
       

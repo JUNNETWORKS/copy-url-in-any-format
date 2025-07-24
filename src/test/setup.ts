@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import { configure } from '@testing-library/react';
+import '../types/global.d.ts';
 
 // Configure React Testing Library
 configure({
@@ -9,31 +10,89 @@ configure({
 });
 
 // Mock Chrome API
-(globalThis as any).chrome = {
+const mockChrome = {
   storage: {
     local: {
-      get: vi.fn(),
-      set: vi.fn(),
-      remove: vi.fn(),
-      clear: vi.fn(),
+      get: vi.fn().mockImplementation((keys?: any, callback?: any) => {
+        if (typeof keys === 'function') {
+          keys({});
+          return;
+        }
+        if (callback) {
+          callback({});
+          return;
+        }
+        return Promise.resolve({});
+      }),
+      set: vi.fn().mockImplementation((_items: any, callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
+      remove: vi.fn().mockImplementation((_keys: any, callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
+      clear: vi.fn().mockImplementation((callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
     },
     sync: {
-      get: vi.fn(),
-      set: vi.fn(),
-      remove: vi.fn(),
-      clear: vi.fn(),
+      get: vi.fn().mockImplementation((keys?: any, callback?: any) => {
+        if (typeof keys === 'function') {
+          keys({});
+          return;
+        }
+        if (callback) {
+          callback({});
+          return;
+        }
+        return Promise.resolve({});
+      }),
+      set: vi.fn().mockImplementation((_items: any, callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
+      remove: vi.fn().mockImplementation((_keys: any, callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
+      clear: vi.fn().mockImplementation((callback?: any) => {
+        if (callback) {
+          callback();
+          return;
+        }
+        return Promise.resolve();
+      }),
     },
   },
   runtime: {
-    lastError: null,
+    lastError: undefined,
   },
   tabs: {
-    query: vi.fn(),
+    query: vi.fn().mockResolvedValue([]),
   },
-} as any;
+};
+
+globalThis.chrome = mockChrome as any;
 
 // Mock window.confirm
-(globalThis as any).confirm = vi.fn(() => true);
+globalThis.confirm = vi.fn(() => true) as unknown as typeof window.confirm;
 
 // Mock navigator.clipboard and userAgent
 Object.defineProperty(globalThis, 'navigator', {

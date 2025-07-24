@@ -13,11 +13,11 @@ const mockTab = {
 describe('Popup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (chrome.tabs.query as any).mockResolvedValue([mockTab]);
+    vi.mocked(chrome.tabs.query).mockResolvedValue([mockTab]);
   });
 
   it('should render loading state initially', () => {
-    (chrome.storage.local.get as any).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(chrome.storage.local.get).mockImplementation(() => new Promise(() => {}));
     
     render(<Popup />);
     
@@ -35,7 +35,7 @@ describe('Popup', () => {
       },
     ];
 
-    (chrome.storage.local.get as any).mockResolvedValue({ formats: mockFormats });
+    vi.mocked(chrome.storage.local.get).mockResolvedValue({ formats: mockFormats });
     
     render(<Popup />);
     
@@ -46,8 +46,8 @@ describe('Popup', () => {
   });
 
   it('should show error when tab info is not available', async () => {
-    (chrome.tabs.query as any).mockResolvedValue([]);
-    (chrome.storage.local.get as any).mockResolvedValue({});
+    vi.mocked(chrome.tabs.query).mockResolvedValue([]);
+    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
     
     render(<Popup />);
     
@@ -57,7 +57,7 @@ describe('Popup', () => {
   });
 
   it('should show settings link', async () => {
-    (chrome.storage.local.get as any).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
     
     render(<Popup />);
     
@@ -67,7 +67,7 @@ describe('Popup', () => {
   });
 
   it('should use default formats when no custom formats exist', async () => {
-    (chrome.storage.local.get as any).mockResolvedValue({});
+    vi.mocked(chrome.storage.local.get).mockResolvedValue({});
     
     render(<Popup />);
     
